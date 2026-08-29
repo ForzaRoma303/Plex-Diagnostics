@@ -7,7 +7,8 @@ This app checks whether the computer running **Plex Media Server** is healthy an
 From the release link you were given:
 
 - **Windows:** `PlexDiagnostics-Setup-1.x.x.exe`
-- **Mac:** `PlexDiagnostics-1.x.x.dmg`
+- **Mac:** `PlexDiagnostics-1.x.x-arm64.dmg` (Apple Silicon M1/M2/M3/M4) or `PlexDiagnostics-1.x.x-x64.dmg` (Intel)
+- **Linux:** `PlexDiagnostics-1.x.x-x64.AppImage` or `PlexDiagnostics-1.x.x-x64.deb`
 
 ## 2. Install
 
@@ -28,6 +29,11 @@ From the release link you were given:
 4. If Mac says the app can’t be opened because it is from an unidentified developer:
    - Close the warning
    - **Right-click** (or Control-click) the app → **Open** → **Open**
+
+### Linux
+
+- **AppImage:** Right-click the `.AppImage` file $\rightarrow$ **Properties** $\rightarrow$ **Permissions** $\rightarrow$ check **Allow executing file as program** (or `chmod +x *.AppImage`), then double-click to run.
+- **Debian / Ubuntu:** Double-click the `.deb` file or run `sudo dpkg -i PlexDiagnostics-*.deb`.
 
 ## 3. First-time setup in the app
 
