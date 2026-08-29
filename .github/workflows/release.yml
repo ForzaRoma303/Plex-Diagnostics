@@ -18,6 +18,8 @@ jobs:
             dist_cmd: dist:win
           - os: macos-latest
             dist_cmd: dist:mac
+          - os: ubuntu-latest
+            dist_cmd: dist:linux
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -30,7 +32,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install
+      - name: Install dependencies
         run: npm ci
 
       - name: Build installer
@@ -43,6 +45,9 @@ jobs:
           path: |
             release/*.exe
             release/*.dmg
+            release/*.AppImage
+            release/*.deb
+            release/*.zip
             release/latest*.yml
             release/*.blockmap
 
@@ -51,17 +56,25 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Download artifacts
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: ls -la artifacts
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            artifacts/**/*.exe
-            artifacts/**/*.dmg
+            artifacts/*.exe
+            artifacts/*.dmg
+            artifacts/*.AppImage
+            artifacts/*.deb
+            artifacts/*.zip
+            artifacts/*.blockmap
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
