@@ -2,13 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 
-// Create PNG file in build/icon.png
+// Create 512x512 PNG file in build/icon.png (required by electron-builder for macOS/Linux)
 function createPng() {
-  const width = 256;
-  const height = size = 256;
+  const width = 512;
+  const height = 512;
   const cx = width / 2;
   const cy = height / 2;
-  const r = width / 2 - 12;
+  const r = width / 2 - 24;
 
   // Uncompressed raw image data: filter byte (0) + RGBA for each scanline
   const rawData = Buffer.alloc(height * (1 + width * 4));
@@ -24,21 +24,21 @@ function createPng() {
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist <= r) {
-        if (dist >= r - 16) {
+        if (dist >= r - 32) {
           // Amber glow #E5A00D
           rawData[pxOffset] = 0xe5;     // R
           rawData[pxOffset + 1] = 0xa0; // G
           rawData[pxOffset + 2] = 0x0d; // B
           rawData[pxOffset + 3] = 0xff; // A
-        } else if (dist >= r - 22) {
+        } else if (dist >= r - 44) {
           // Dark accent border
           rawData[pxOffset] = 0x1c;
           rawData[pxOffset + 1] = 0x24;
           rawData[pxOffset + 2] = 0x30;
           rawData[pxOffset + 3] = 0xff;
         } else {
-          // Central chevron
-          const inChevron = (dx > -30 && dx < 40 && Math.abs(dy) < 50 && dx + Math.abs(dy)*0.7 < 45);
+          // Central chevron (scaled for 512x512)
+          const inChevron = (dx > -60 && dx < 80 && Math.abs(dy) < 100 && dx + Math.abs(dy)*0.7 < 90);
           if (inChevron) {
             rawData[pxOffset] = 0xf5;     // R
             rawData[pxOffset + 1] = 0xb8; // G
@@ -71,7 +71,6 @@ function createPng() {
     const crcBuf = Buffer.alloc(4);
     const toCrc = Buffer.concat([typeBuf, data]);
 
-    // CRC32 implementation
     let crc = 0 ^ (-1);
     for (let i = 0; i < toCrc.length; i++) {
       crc = (crc >>> 8) ^ crcTable[(crc ^ toCrc[i]) & 0xff];
@@ -82,7 +81,6 @@ function createPng() {
     return Buffer.concat([len, typeBuf, data, crcBuf]);
   }
 
-  // Build CRC table
   const crcTable = [];
   for (let n = 0; n < 256; n++) {
     let c = n;
@@ -93,7 +91,6 @@ function createPng() {
     crcTable[n] = c;
   }
 
-  // IHDR chunk
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(width, 0);
   ihdr.writeUInt32BE(height, 4);
@@ -104,18 +101,14 @@ function createPng() {
   ihdr[12] = 0; // Interlace: none
 
   const ihdrChunk = makeChunk('IHDR', ihdr);
-
-  // IDAT chunk (compressed data)
   const compressed = zlib.deflateSync(rawData);
   const idatChunk = makeChunk('IDAT', compressed);
-
-  // IEND chunk
   const iendChunk = makeChunk('IEND', Buffer.alloc(0));
 
   const pngBuffer = Buffer.concat([signature, ihdrChunk, idatChunk, iendChunk]);
   const outPath = path.join(__dirname, 'build', 'icon.png');
   fs.writeFileSync(outPath, pngBuffer);
-  console.log('Successfully generated:', outPath);
+  console.log('Successfully generated (512x512):', outPath);
 }
 
 // Generate ICO
@@ -210,7 +203,7 @@ function createIco() {
   const icoBuffer = Buffer.concat([icondir, direntry, bih, pixels, mask]);
   const outPath = path.join(__dirname, 'build', 'icon.ico');
   fs.writeFileSync(outPath, icoBuffer);
-  console.log('Successfully generated:', outPath);
+  console.log('Successfully generated (256x256):', outPath);
 }
 
 createPng();
