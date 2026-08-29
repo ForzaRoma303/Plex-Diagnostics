@@ -1,7 +1,7 @@
 {
   "name": "plex-diagnostics",
   "productName": "Plex Diagnostics",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Local health and efficiency diagnostics for Plex Media Server",
   "main": "dist-electron/main.js",
   "author": "Plex Diagnostics",

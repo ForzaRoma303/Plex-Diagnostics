@@ -74,7 +74,12 @@ jobs:
             artifacts/*.AppImage
             artifacts/*.deb
             artifacts/*.zip
-            artifacts/*.blockmap
+            artifacts/latest*.yml
+            artifacts/*blockmap
+            artifacts/*.exe.blockmap
+            artifacts/*.dmg.blockmap
+            artifacts/*.zip.blockmap
+            artifacts/*.AppImage.blockmap
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
