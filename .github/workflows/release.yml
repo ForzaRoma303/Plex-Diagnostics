@@ -61,10 +61,6 @@ jobs:
             release/*.zip
             release/latest*.yml
             release/*blockmap
-            release/*.exe.blockmap
-            release/*.dmg.blockmap
-            release/*.zip.blockmap
-            release/*.AppImage.blockmap
           if-no-files-found: warn
 
   publish:
@@ -84,18 +80,7 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            all-artifacts/*.exe
-            all-artifacts/*.dmg
-            all-artifacts/*.AppImage
-            all-artifacts/*.deb
-            all-artifacts/*.zip
-            all-artifacts/latest*.yml
-            all-artifacts/*blockmap
-            all-artifacts/*.exe.blockmap
-            all-artifacts/*.dmg.blockmap
-            all-artifacts/*.zip.blockmap
-            all-artifacts/*.AppImage.blockmap
+          files: all-artifacts/*
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
