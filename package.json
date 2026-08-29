@@ -1,7 +1,7 @@
 {
   "name": "plex-diagnostics",
   "productName": "Plex Diagnostics",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Local health and efficiency diagnostics for Plex Media Server",
   "main": "dist-electron/main.js",
   "author": "Plex Diagnostics",
@@ -13,7 +13,8 @@
     "dist": "npm run build && electron-builder",
     "dist:win": "npm run build && electron-builder --win",
     "dist:mac": "npm run build && electron-builder --mac",
-    "dist:linux": "npm run build && electron-builder --linux"
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:all": "npm run build && electron-builder -mwl"
   },
   "build": {
     "appId": "com.plexdiagnostics.app",
@@ -49,6 +50,13 @@
       "target": [
         {
           "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
           "arch": [
             "x64",
             "arm64"
